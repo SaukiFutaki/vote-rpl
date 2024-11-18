@@ -35,7 +35,7 @@ export default async function Page() {
         <div className="text-center">
           <Link href="/dashboard/vote/participant"  className="text-red-300 hover:text-red-600">
             <DrawOutlineButton>
-            Ayo mulai voting
+            Ayo mulai votinggg
             </DrawOutlineButton>
           </Link>
         </div>
