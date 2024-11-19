@@ -7,6 +7,25 @@ import RecentVoteCard from "./_components/recent-card-votes";
 import { Separator } from "@/components/ui/separator";
 
 
+interface VoteProps {
+  id: string;
+  title: string;
+  code: string;
+  from: Date;
+  to: Date;
+  candidates: Candidate[];
+  enabled?: boolean;
+}
+
+interface Candidate {
+  id: string;
+  name: string;
+  votes: number;
+  vision: string;
+  mission: string;
+  image: string;
+}
+
 export default async function Page() {
   const session = await auth();
   const userId = session?.user.id;
@@ -27,7 +46,7 @@ export default async function Page() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
           {dataRecent.length > 0 ? (
-              dataRecent.map((vote) => (
+              dataRecent.map((vote : VoteProps ) => (
                 <RecentVoteCard
                   key={vote.id}
                   id={vote.id}
@@ -58,7 +77,7 @@ export default async function Page() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
           {activeVotes.length > 0 ? (
-              activeVotes.map((vote) => (
+              activeVotes.map((vote : VoteProps) => (
                 <RecentVoteCard
                   key={vote.id}
                   id={vote.id}
@@ -90,7 +109,7 @@ export default async function Page() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
           {deActiveVotes.length > 0 ? (
-              deActiveVotes.map((vote) => (
+              deActiveVotes.map((vote : VoteProps) => (
                 <RecentVoteCard
                   key={vote.id}
                   id={vote.id}
