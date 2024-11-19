@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { getVoteBySessionId } from '@/lib/actions/votes';
 import React from 'react'
 import UpdateVotingSession from './updateFormVoteSession';
@@ -17,7 +18,7 @@ export default async function Page({ params } : Iprops) {
   return (
     <div>
    
-      {data.map((session) => (
+      {data.map((session :any) => (
         <UpdateVotingSession 
           key={session.id}
           session={session}
