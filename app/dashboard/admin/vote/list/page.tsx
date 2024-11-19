@@ -6,7 +6,7 @@ import { DataTable } from './_components/DataTable'
 
 export default async function Page() {
     const data = await getVoteSession();
-    const formattedData = data.map((session) => ({
+    const formattedData = data.map((session: { from: moment.MomentInput; to: moment.MomentInput; }) => ({
         ...session,
         from: moment(session.from).format("MMMM Do YYYY, h:mm:ss a"),
         to: moment(session.to).format("MMMM Do YYYY, h:mm:ss a"),

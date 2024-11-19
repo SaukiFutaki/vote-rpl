@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
 
 import prisma from "@/lib/db/prisma";
@@ -183,7 +184,7 @@ export async function votesCountBySession(sessionId: string) {
       },
   });
 
-  return result.map(candidate => ({
+  return result.map((candidate: { id: string; name: string; _count: { votes: string; }; mission: string; vision: string; }) => ({
       id: candidate.id,
       name: candidate.name,
       votes: candidate._count.votes,
@@ -216,7 +217,7 @@ export async function getVoteSessionByCode (code: string) {
     code: session?.code,
     from: session?.from,
     to: session?.to,
-    candidates: session?.candidates.map((candidate) => ({
+    candidates: session?.candidates.map((candidate: { id: string; name: string; votes: string | string[]; vision: string; mission: string; image: string; }) => ({
       id: candidate.id,
       name: candidate.name,
       votes: candidate.votes.length,
@@ -309,7 +310,7 @@ export async function submitVote(
     }
 
     // Create vote using transaction to ensure data consistency
-    const result = await prisma.$transaction(async (tx) => {
+    const result = await prisma.$transaction(async (tx: { vote: { create: (arg0: { data: { voterId: string; candidateId: string; sessionId: string; }; include: { candidate: { select: { name: boolean; }; }; }; }) => string; }; }) => {
       const vote = await tx.vote.create({
         data: {
           voterId: userId,
@@ -373,13 +374,13 @@ export async function getRecentVotes(userId: string) {
     },
   });
 
-  return result.map((session) => ({
+  return result.map((session: { id: any; title: any; code: any; from: any; to: any; candidates: any[]; }) => ({
     id: session.id,
     title: session.title,
     code: session.code,
     from: session.from,
     to: session.to,
-    candidates: session.candidates.map((candidate) => ({
+    candidates: session.candidates.map((candidate: { id: any; name: any; votes: string | any[]; vision: any; mission: any; image: any; }) => ({
       id: candidate.id,
       name: candidate.name,
       votes: candidate.votes.length,
@@ -411,14 +412,14 @@ export async function getVotesActive() {
     },
   });
 
-  return result.map((session) => ({
+  return result.map((session: { id: any; title: any; code: any; from: any; to: any; candidates: any[]; }) => ({
     id: session.id,
     title: session.title,
     code: session.code,
     from: session.from,
     to: session.to,
     
-    candidates: session.candidates.map((candidate) => ({
+    candidates: session.candidates.map((candidate: { id: any; name: any; votes: string | any[]; vision: any; mission: any; image: any; }) => ({
       id: candidate.id,
       name: candidate.name,
       votes: candidate.votes.length,
@@ -448,13 +449,13 @@ export async function getVotesNotActive() {
     },
   });
 
-  return result.map((session) => ({
+  return result.map((session: { id: any; title: any; code: any; from: any; to: any; candidates: any[]; }) => ({
     id: session.id,
     title: session.title,
     code: session.code,
     from: session.from,
     to: session.to,
-    candidates: session.candidates.map((candidate) => ({
+    candidates: session.candidates.map((candidate: { id: any; name: any; votes: string | any[]; vision: any; mission: any; image: any; }) => ({
       id: candidate.id,
       name: candidate.name,
       votes: candidate.votes.length,
@@ -482,13 +483,13 @@ export async function getVoteEnded() {
     },
   });
 
-  return result.map((session) => ({
+  return result.map((session: { id: any; title: any; code: any; from: any; to: any; candidates: any[]; }) => ({
     id: session.id,
     title: session.title,
     code: session.code,
     from: session.from,
     to: session.to,
-    candidates: session.candidates.map((candidate) => ({
+    candidates: session.candidates.map((candidate: { id: any; name: any; votes: string | any[]; vision: any; mission: any; image: any; }) => ({
       id: candidate.id,
       name: candidate.name,
       votes: candidate.votes.length,
