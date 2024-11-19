@@ -4,18 +4,19 @@ import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Card, CardContent } from "@/components/ui/card";
 import {
-    Form,
-    FormControl,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
 } from "@/components/ui/popover";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
@@ -25,7 +26,7 @@ import { FormVoteEditValues, formVoteSchema } from "@/schemas/voteSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
 import { CalendarIcon, Loader2, Plus, Trash2 } from "lucide-react";
-
+import { Switch } from "@/components/ui/switch";
 import { ToastAction } from "@/components/ui/toast";
 import { useTransition } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
@@ -46,6 +47,8 @@ interface VoteSession {
   code: string;
   from: Date;
   to: Date;
+  isPublished: boolean;
+  isViewabled: boolean;
   createdAt: Date;
   updatedAt: Date;
   candidates?: Candidate[];
@@ -64,6 +67,8 @@ export default function UpdateVotingSession({ session }: VoteSessionProps) {
     defaultValues: {
       title: session.title,
       code: session.code,
+      isPublished: session.isPublished,
+      isViewabled: session.isViewabled,
       dateRange: { from: session.from, to: session.to },
       candidates: session.candidates?.map((candidate) => ({
         name: candidate.name,
@@ -176,6 +181,50 @@ export default function UpdateVotingSession({ session }: VoteSessionProps) {
             )}
           />
 
+          <FormField
+            control={form.control}
+            name="isPublished"
+            render={({ field }) => (
+              <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                <div className="space-y-0.5">
+                  <FormLabel className="text-base">Publikasikan</FormLabel>
+                  <FormDescription>
+                    Voting akan langsung dipublikasikan setelah dibuat
+                  </FormDescription>
+                </div>
+                <FormControl>
+                  <Switch
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="isViewabled"
+            render={({ field }) => (
+              <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                <div className="space-y-0.5">
+                  <FormLabel className="text-base">
+                    Tampilkan Hasil Voting
+                  </FormLabel>
+                  <FormDescription>
+                    Hasil voting akan langsung ditampilkan setelah voting
+                    berakhir
+                  </FormDescription>
+                </div>
+                <FormControl>
+                  <Switch
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+
           <div>
             <h2 className="text-lg font-semibold mb-4">Kandidat</h2>
             <div className="space-y-4">
@@ -245,7 +294,6 @@ export default function UpdateVotingSession({ session }: VoteSessionProps) {
                         </FormItem>
                       )}
                     />
-                
                   </CardContent>
                 </Card>
               ))}
@@ -274,7 +322,7 @@ export default function UpdateVotingSession({ session }: VoteSessionProps) {
             </Button>
           ) : (
             <Button type="submit" className="w-full">
-              Buat Voting
+              Edit Voting 
             </Button>
           )}
         </form>

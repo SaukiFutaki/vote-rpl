@@ -11,16 +11,16 @@ interface IProps {
   }>;
 }
 
-// TODO : revalidate setiap 30 detik
-export const revalidate = 30;
+export const dynamic = 'force-dynamic';
 
 export default async function Page({ params }: IProps) {
   const { code } = await params;
   const data = await getVoteSessionByCode(code as string) as VoteSession;
-  if (!data) {
+
+  if (data.id === undefined) {
     return notFound();
   }
-  console.log(data);
+  
 
   return (
     <div>

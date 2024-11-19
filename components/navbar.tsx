@@ -13,18 +13,15 @@ import { BadgePlus, List, LogOut, Settings, User, Vote } from "lucide-react";
 import Link from "next/link";
 import { Button } from "./ui/button";
 
-export default function Navbar({
-  userName,
-  email,
-  userRole,
-}: IAvatarProps) {
+export default function Navbar({ userName, email, userRole }: IAvatarProps) {
   return (
     <div className="flex flex-col ">
       <header className="px-4 lg:px-6 h-20 flex items-center ">
-        <Link className="flex items-center justify-center" href="/dashboard">
+        <Link className="flex items-center justify-center mr-4" href="/dashboard">
           <Vote className="h-6 w-6" />
           <span className="ml-2 text-lg font-bold">VoteNow</span>
         </Link>
+    
         {!email ? (
           <nav className="ml-auto flex items-center gap-4 sm:gap-6">
             {signInButton()}

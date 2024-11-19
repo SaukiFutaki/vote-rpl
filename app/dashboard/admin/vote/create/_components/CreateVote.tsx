@@ -58,6 +58,7 @@ export default function CreateVote() {
         to: undefined,
       },
       isPublished: false,
+      isViewabled: false,
       candidates: [{ name: "", vision: "", mission: "", photo: undefined }],
     },
   });
@@ -178,6 +179,29 @@ export default function CreateVote() {
                         </FormLabel>
                         <FormDescription>
                           Voting akan langsung dipublikasikan setelah dibuat
+                        </FormDescription>
+                      </div>
+                      <FormControl>
+                        <Switch
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="isViewabled"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                      <div className="space-y-0.5">
+                        <FormLabel className="text-base">
+                          Tampilkan Hasil Voting
+                        </FormLabel>
+                        <FormDescription>
+                          Hasil voting akan langsung ditampilkan setelah voting
+                          berakhir
                         </FormDescription>
                       </div>
                       <FormControl>

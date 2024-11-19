@@ -1,10 +1,15 @@
+"use client";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 
-
+const NoSSR = dynamic(
+  () => import("@/app/dashboard/vote/participant/_components/CountDown"),
+  { ssr: false }
+);
 interface Candidate {
   id: string;
   name: string;
@@ -20,24 +25,29 @@ interface RecentVoteCardProps {
   code: string;
   from: Date;
   to: Date;
+  viewable?: boolean;
   candidates: Candidate[];
+  enabled?: boolean;
 }
 export default function RecentVoteCard({
   title,
   to,
   code,
   candidates,
+  enabled,
 }: RecentVoteCardProps) {
   const winner = candidates.reduce((prev, curr) =>
     curr.votes > prev.votes ? curr : prev
   );
- 
+
+  const endDate = new Date(to);
+
   const now = new Date();
   const isOngoing = now <= to;
   const cardBgColor = isOngoing
     ? "bg-emerald-400 group-hover:bg-emerald-500"
-    : "bg-emerald-300 group-hover:bg-emerald-400";
-  const statusText = isOngoing ? "ONGOING" : "ENDED";
+    : "bg-red-300 group-hover:bg-red-400";
+  const statusText = isOngoing ? "BERLANGSUNG" : "SELESAI";
 
   return (
     <div className="relative group">
@@ -77,15 +87,23 @@ export default function RecentVoteCard({
           </div>
         </div>
         <div className="mt-4 mb-4 text-sm">
-          <p>Total Pemilih : {candidates.reduce((sum, c) => sum + c.votes, 0)}</p>
-          <p>Selesai pada : {new Date(to).toLocaleDateString()}</p>
-        
+          <p>
+            Total Pemilih : {candidates.reduce((sum, c) => sum + c.votes, 0)}
+          </p>
+
+          <div className="flex items-center gap-3">
+            <p>Berakhir pada :</p>
+            <NoSSR targetDate={endDate} />
+          </div>
         </div>
-        <Link href={`/dashboard/vote/participant/${code}`}>
-          <Button className="w-full bg-white text-black border border-black hover:bg-black hover:text-white transition-colors">
-            Lihat Voting
-          </Button>
-        </Link>
+
+        {enabled && (
+          <Link href={`/dashboard/vote/participant/${code}`}>
+            <Button className="w-full bg-white text-black border border-black hover:bg-black hover:text-white transition-colors">
+              Lihat Voting
+            </Button>
+          </Link>
+        )}
       </div>
     </div>
   );

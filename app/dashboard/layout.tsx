@@ -1,11 +1,11 @@
 import { auth } from "@/auth";
 import Navbar from "@/components/navbar";
-import React from "react";
+
+import { Github, Linkedin, Twitter, Vote } from 'lucide-react';
 import type { Metadata } from "next";
 import { Fira_Code } from "next/font/google";
-import Image from "next/image";
 import Link from "next/link";
-import { Twitter, Linkedin, Github } from 'lucide-react'
+import React from "react";
 
 const fc = Fira_Code({ subsets: ["latin"] });
 
@@ -35,13 +35,7 @@ export default async function LayoutDashboard({ children }: { children: React.Re
           {/* Left Section */}
           <div className="mb-8 md:mb-0">
             <Link href="/" className="flex items-center gap-2 text-white mb-4">
-              <Image
-                src="/placeholder.svg"
-                alt="Voting App Logo"
-                width={32}
-                height={32}
-                className="dark:invert"
-              />
+    <Vote className="h-8 w-8 text-white" />
               <span className="font-semibold">Voting App</span>
             </Link>
             <div className="space-y-1">
@@ -54,9 +48,6 @@ export default async function LayoutDashboard({ children }: { children: React.Re
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-16">
             {/* Company Links */}
             <div className="space-y-4">
-              <Link href="/pricing" className="block hover:text-white transition-colors">
-                Pricing
-              </Link>
               <Link href="/blog" className="block hover:text-white transition-colors">
                 Blog
               </Link>

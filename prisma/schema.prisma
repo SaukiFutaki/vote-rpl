@@ -112,6 +112,7 @@ model VotingSession {
   publisher  String
   Vote       Vote[]
   isPublished Boolean
+  isViewabled  Boolean
   
 
   @@map("voting_sessions")

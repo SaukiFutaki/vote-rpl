@@ -5,6 +5,7 @@ import { FormVoteValues } from "@/schemas/voteSchema";
 import { code } from "../code";
 import { auth } from "@/auth";
 import { revalidatePath } from "next/cache";
+import { pusherServer } from "../pusher";
 
 
 
@@ -14,7 +15,7 @@ export async function postVoteSession(values: FormVoteValues) {
   const user = session?.user.name
   
 
-  const { title, dateRange, candidates, isPublished } = values;
+  const { title, dateRange, candidates, isPublished, isViewabled } = values;
   console.log(title, dateRange, candidates);
 
   const result = await prisma.votingSession.create({
@@ -25,6 +26,7 @@ export async function postVoteSession(values: FormVoteValues) {
       to: dateRange.to,
       code : code(6),
       isPublished : isPublished,
+      isViewabled : isViewabled,
       candidates: {
         create: candidates.map((candidate) => ({
           name: candidate.name,
@@ -141,7 +143,7 @@ export async function deleteVoteSessionById(sessionId: string) {
 
 // TODO : Implementasi fungsi editVoteSessionById
 export async function editVoteSessionById(sessionId: string, values: FormVoteValues) {
-    const { title, dateRange, candidates } = values;
+    const { title, dateRange, candidates, isPublished,isViewabled } = values;
 
     const result = await prisma.votingSession.update({
         where: {
@@ -151,6 +153,8 @@ export async function editVoteSessionById(sessionId: string, values: FormVoteVal
             title: title,
             from: dateRange.from,
             to: dateRange.to,
+            isPublished: isPublished,
+            isViewabled: isViewabled,
             candidates: {
                 deleteMany: {},
                 create: candidates.map((candidate) => ({
@@ -324,9 +328,11 @@ export async function submitVote(
       return vote;
     });
 
+    const updatedSession = await getVoteSessionByCode(votingSession.code);
     // Revalidate the voting pages
     revalidatePath(`/vote/${sessionId}`);
     revalidatePath(`/vote/${sessionId}/result`);
+    await pusherServer.trigger(`vote-channel-${sessionId}`, 'vote-updated', updatedSession);
 
     return {
       success: true,
@@ -355,6 +361,115 @@ export async function getRecentVotes(userId: string) {
             },
           },
         },
+      },
+      isPublished: true,
+    },
+    include: {
+      candidates: {
+        include: {
+          votes: true,
+        },
+      },
+    },
+  });
+
+  return result.map((session) => ({
+    id: session.id,
+    title: session.title,
+    code: session.code,
+    from: session.from,
+    to: session.to,
+    candidates: session.candidates.map((candidate) => ({
+      id: candidate.id,
+      name: candidate.name,
+      votes: candidate.votes.length,
+      vision: candidate.vision,
+      mission: candidate.mission,
+      image: candidate.image,
+    })),
+  }));
+}
+
+export async function getVotesActive() {
+  const result = await prisma.votingSession.findMany({
+    where: {
+      from: {
+        lte: new Date(),
+      },
+      to: {
+        gte: new Date(),
+      },
+      isPublished: true,
+      isViewabled: true,
+    },
+    include: {
+      candidates: {
+        include: {
+          votes: true,
+        },
+      },
+    },
+  });
+
+  return result.map((session) => ({
+    id: session.id,
+    title: session.title,
+    code: session.code,
+    from: session.from,
+    to: session.to,
+    
+    candidates: session.candidates.map((candidate) => ({
+      id: candidate.id,
+      name: candidate.name,
+      votes: candidate.votes.length,
+      vision: candidate.vision,
+      mission: candidate.mission,
+      image: candidate.image,
+    })),
+  }));
+}
+
+
+
+export async function getVotesNotActive() {
+  const result = await prisma.votingSession.findMany({
+    where: {
+      from: {
+        lt: new Date(),
+      },
+      isPublished: true,
+    },
+    include: {
+      candidates: {
+        include: {
+          votes: true,
+        },
+      },
+    },
+  });
+
+  return result.map((session) => ({
+    id: session.id,
+    title: session.title,
+    code: session.code,
+    from: session.from,
+    to: session.to,
+    candidates: session.candidates.map((candidate) => ({
+      id: candidate.id,
+      name: candidate.name,
+      votes: candidate.votes.length,
+      vision: candidate.vision,
+      mission: candidate.mission,
+      image: candidate.image,
+    })),
+  }));
+}
+
+export async function getVoteEnded() {
+  const result = await prisma.votingSession.findMany({
+    where: {
+      to: {
+        lt: new Date(),
       },
       isPublished: true,
     },

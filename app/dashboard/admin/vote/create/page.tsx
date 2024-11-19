@@ -8,7 +8,7 @@ export default async function Page() {
   const session = await auth()
   const user = session?.user
   if(user?.role !== 'ADMIN') {
-    redirect('/dashboard')
+    redirect('/dashboard/vote/participant')
   }
   return (
     <div className='container mx-auto px-4'>

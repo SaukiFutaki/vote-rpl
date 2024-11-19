@@ -14,7 +14,7 @@ export default function NotFound() {
         <div className=" absolute top-0 left-0 w-full h-full"></div>
       </div>
 
-      <Link className="hover:underline" href="/dashboard/vote/participant">Back to your home</Link>
+      <Link className="hover:underline" href="/dashboard">Back to your home</Link>
     </div>
   );
 }

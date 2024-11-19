@@ -33,6 +33,8 @@ import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 import { Cell, Label, Pie, PieChart, ResponsiveContainer } from "recharts";
 import Countdown from "./CountDown";
+import { pusherClient } from "@/lib/pusher";
+import { useEffect } from "react";
 
 export default function VotingParticipant({ session }: VotingInterfaceProps) {
   const [selectedCandidate, setSelectedCandidate] = useState<string | null>(
@@ -41,6 +43,19 @@ export default function VotingParticipant({ session }: VotingInterfaceProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
   const router = useRouter();
+
+  useEffect(() => {
+    const channel = pusherClient.subscribe(`vote-channel-${session.id}`);
+    channel.bind("vote-updated", () => {
+  
+      router.refresh();
+    });
+
+    return () => {
+      channel.unbind_all();
+      channel.unsubscribe();
+    };
+  }, [session.id, router]);
 
   const colorPalette = ["#FFC107", "#2196F3", "#4CAF50", "#FF5722", "#9333ea"]; // Warna kandidat
   const chartConfig: Record<string, { label: string; color: string }> =
@@ -76,6 +91,7 @@ export default function VotingParticipant({ session }: VotingInterfaceProps) {
 
   const startDate = new Date(session.from);
   const endDate = new Date(session.to);
+  console.log("H", endDate);
 
   const handleVoteSubmission = async () => {
     if (!selectedCandidate) {
@@ -201,7 +217,12 @@ export default function VotingParticipant({ session }: VotingInterfaceProps) {
               onClick={() => setSelectedCandidate(candidate.id)}
             >
               <div>
-                <span  style={{ color: candidate.fill }} className="font-bold mr-2">{index + 1}</span>
+                <span
+                  style={{ color: candidate.fill }}
+                  className="font-bold mr-2"
+                >
+                  {index + 1}
+                </span>
                 <span style={{ color: candidate.fill }}>{candidate.name}</span>
               </div>
               <div className="flex items-center">
@@ -235,12 +256,19 @@ export default function VotingParticipant({ session }: VotingInterfaceProps) {
       ))}
       <AlertDialog>
         <AlertDialogTrigger asChild>
-          <Button
-            className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
+          {startDate > endDate ? (
+           
+            <Button className="w-full" disabled>
+              Voting telah berakhir
+            </Button>
+          ) : (
+            <Button
+            className="w-full"
             disabled={!selectedCandidate || isSubmitting}
           >
             {isSubmitting ? "Memproses..." : "Kirim Vote Saya"}
           </Button>
+          )}
         </AlertDialogTrigger>
         <AlertDialogContent>
           <AlertDialogHeader>

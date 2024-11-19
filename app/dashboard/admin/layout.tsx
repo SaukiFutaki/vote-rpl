@@ -16,7 +16,7 @@ export default async function LayoutAdmin({
     redirect("/dashboard/vote/participant");
   }
   return (
-    <div className={`${sg.className}`}>
+    <div className={`${sg.className} bg-white`}>
       <div>
       {children}
       </div>

@@ -7,7 +7,7 @@ const CountdownComponent = ({ targetDate }: { targetDate: Date }) => {
   const renderer = ({ days, hours, minutes, seconds, completed }: CountdownRenderProps) => {
     if (completed) {
       return <>
-            <Badge variant={"destructive"}>Voting telah berakhir</Badge>
+            <Badge className="flex items-center justify-center" variant={"destructive"}>Voting telah berakhir</Badge>
       </>
     } else {
       return (

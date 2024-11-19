@@ -65,7 +65,7 @@ export default function FormCodeParticipant() {
                     <Input
                       placeholder="Masukkan Kode Voting"
                       {...field}
-                      className="text-center"
+                      className="text-center border-black"
                     />
                   </FormControl>
                   <FormMessage />
