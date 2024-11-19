@@ -1,9 +1,13 @@
+
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import NextAuth from "next-auth";
 import authConfig from "./auth.config";
 import prisma from "./lib/db/prisma";
 import { getUserById } from "./lib/db/user";
-import { USerRole } from "@prisma/client";
+
+
+
+type USerRole = "ADMIN" | "USER";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   callbacks: {
