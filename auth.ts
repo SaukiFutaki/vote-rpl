@@ -5,9 +5,9 @@ import authConfig from "./auth.config";
 import prisma from "./lib/db/prisma";
 import { getUserById } from "./lib/db/user";
 
+import { USerRole } from "./prisma/generated/client";
 
 
-type USerRole = "ADMIN" | "USER";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   callbacks: {
