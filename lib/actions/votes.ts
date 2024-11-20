@@ -184,7 +184,7 @@ export async function votesCountBySession(sessionId: string) {
       },
   });
 
-  return result.map((candidate: { id: string; name: string; _count: { votes: string; }; mission: string; vision: string; }) => ({
+  return result.map((candidate: { id: string; name: string; _count: { votes: number; }; mission: string; vision: string; }) => ({
       id: candidate.id,
       name: candidate.name,
       votes: candidate._count.votes,
@@ -217,7 +217,7 @@ export async function getVoteSessionByCode (code: string) {
     code: session?.code,
     from: session?.from,
     to: session?.to,
-    candidates: session?.candidates.map((candidate: { id: string; name: string; votes: string | string[]; vision: string; mission: string; image: string; }) => ({
+    candidates: session?.candidates.map((candidate) => ({
       id: candidate.id,
       name: candidate.name,
       votes: candidate.votes.length,
@@ -310,7 +310,7 @@ export async function submitVote(
     }
 
     // Create vote using transaction to ensure data consistency
-    const result = await prisma.$transaction(async (tx: { vote: { create: (arg0: { data: { voterId: string; candidateId: string; sessionId: string; }; include: { candidate: { select: { name: boolean; }; }; }; }) => string; }; }) => {
+    const result = await prisma.$transaction(async (tx) => {
       const vote = await tx.vote.create({
         data: {
           voterId: userId,
