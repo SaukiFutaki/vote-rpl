@@ -3,14 +3,12 @@ import type { NextAuthConfig } from "next-auth";
 import Google from "next-auth/providers/google";
 import { LoginSchema } from "./schemas/authSchema";
 import { getUserByNim } from "./lib/db/user";
-
 import bcrypt from "bcryptjs";
 
 export default {
   providers: [
     Google({
-        clientId: process.env.GOOGLE_CLIENT_ID,
-        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+   
     }),
     Credentials({
         async authorize(credentials) {

@@ -9,7 +9,7 @@ import { USerRole } from "@prisma/client";
 
 
 
-export const { handlers, signIn, signOut, auth } = NextAuth({
+export const { handlers, signOut, auth } = NextAuth({
   callbacks: {
     // async signIn({user}) {
     //   const existingUser = await getUserById(user.id as string);
