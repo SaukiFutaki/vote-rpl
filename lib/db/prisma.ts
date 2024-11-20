@@ -5,7 +5,7 @@ import { PrismaClient } from "@prisma/client";
 const prismaClientSingleton = () => {
   // TODO: Make this edge-compatible
   const neon = new Pool({connectionString: process.env.DATABASE_URL});
-  const adapter = new PrismaNeon(neon);
+  const adapter = new PrismaNeon(neon,{});
 
   return new PrismaClient({adapter})
   // .$extends( withPulse({
